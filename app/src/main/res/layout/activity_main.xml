@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".MainActivity">
+
+
+
+    <TextView
+        android:layout_alignParentRight="true"
+        android:id="@+id/score"
+        android:text="5000"
+        android:layout_width="wrap_content"
+        android:padding="20dp"
+        android:textColor="@android:color/white"
+        android:layout_height="wrap_content" />
+
+
+    <FrameLayout
+        android:id="@+id/frame_bar"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:background="@drawable/frame"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.rayzem.slot_machine_app.CustomView.ImageViewScrolling
+                android:id="@+id/image_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </com.rayzem.slot_machine_app.CustomView.ImageViewScrolling>
+
+            <com.rayzem.slot_machine_app.CustomView.ImageViewScrolling
+                android:id="@+id/image_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </com.rayzem.slot_machine_app.CustomView.ImageViewScrolling>
+
+            <com.rayzem.slot_machine_app.CustomView.ImageViewScrolling
+                android:id="@+id/image_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </com.rayzem.slot_machine_app.CustomView.ImageViewScrolling>
+
+
+
+        </LinearLayout>
+
+
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/btn_Up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="42dp"
+        android:layout_toEndOf="@+id/frame_bar"
+        android:src="@drawable/up" />
+
+    <ImageView
+        android:id="@+id/btn_Down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/frame_bar"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="1dp"
+        android:visibility="gone"
+        android:layout_toStartOf="@+id/score"
+        android:src="@drawable/down" />
+
+</RelativeLayout>
