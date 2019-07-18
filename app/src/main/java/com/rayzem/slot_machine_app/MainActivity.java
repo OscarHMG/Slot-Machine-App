@@ -3,6 +3,7 @@ package com.rayzem.slot_machine_app;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceEventEnd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
     }
 
     public void init(){
@@ -41,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements InterfaceEventEnd
         score = findViewById(R.id.score);
 
         image.setEventEndListener(this);
+        image2.setEventEndListener(this);
+        image3.setEventEndListener(this);
+
+        score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
+
 
         btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements InterfaceEventEnd
                     image3.setValueRandom(new Random().nextInt(6) , new Random().nextInt((15-5) +1) +5);
                     GLOBAL_SCORE -= 50;
 
-                    score.setText(""+GLOBAL_SCORE);
+                    score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
                 }else{
-                    Toast.makeText(MainActivity.this, "Not enough money", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.not_money, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -64,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceEventEnd
 
     @Override
     public void endEventListener(int result, int cont) {
+
         if(count_done < 2){
             count_done ++;
         }else{
@@ -72,15 +80,15 @@ public class MainActivity extends AppCompatActivity implements InterfaceEventEnd
             count_done = 0;
 
             if(image.getValue() == image2.getValue() && image2.getValue() == image3.getValue()){
-                Toast.makeText(this, "YOU WIN BIG PRIZE!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.win_big, Toast.LENGTH_LONG).show();
                 GLOBAL_SCORE += 300;
-                score.setText(""+GLOBAL_SCORE);
+                score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
             }else if(image.getValue() == image2.getValue() || image2.getValue() == image3.getValue() || image.getValue() == image3.getValue()){
-                Toast.makeText(this, "YOU WIN SMALL PRIZE!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.win_small, Toast.LENGTH_LONG).show();
                 GLOBAL_SCORE += 50;
-                score.setText(""+GLOBAL_SCORE);
+                score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
             }else{
-                Toast.makeText(this, "YOU LOSE!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.lose, Toast.LENGTH_LONG).show();
             }
         }
     }

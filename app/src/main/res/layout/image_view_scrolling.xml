@@ -6,13 +6,13 @@
 
     <ImageView
         android:id="@+id/current_item"
-        android:src="@drawable/cherry_done"
+        android:src="@drawable/bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/next_item"
-        android:src="@drawable/cherry_done"
+        android:src="@drawable/bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

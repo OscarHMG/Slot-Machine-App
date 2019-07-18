@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Slot-Machine-App</string>
+    <string name="amount_text">Amount</string>
+    <string name="not_money">Not enough money</string>
+    <string name="win_big">YOU WIN BIG PRIZE!</string>
+    <string name="win_small">YOU WIN SMALL PRIZE!</string>
+    <string name="lose">YOU LOSE!</string>
 </resources>

@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Switch;
 
 import com.rayzem.slot_machine_app.R;
 
@@ -18,7 +17,7 @@ public class ImageViewScrolling extends FrameLayout {
     private int lastResult = 0, oldValue = 0;
 
 
-    private static int BAR = 0, SEVEN = 1, ORANGE = 2, LEMON = 3, TRIPLE = 4, WATERMELON = 5;
+    private static int BAR = 0, SEVEN = 1, CHERRY = 2, LEMON = 3, BANANA = 4, WATERMELON = 5;
 
 
     public ImageViewScrolling(Context context) {
@@ -96,17 +95,17 @@ public class ImageViewScrolling extends FrameLayout {
 
 
         if(value == BAR)
-            imageView.setImageResource(R.drawable.bar_done);
+            imageView.setImageResource(R.drawable.bar);
         else if (value == SEVEN)
-            imageView.setImageResource(R.drawable.sevent_done);
+            imageView.setImageResource(R.drawable.seven);
         else if (value == LEMON)
-            imageView.setImageResource(R.drawable.lemon_done);
-        else if (value == ORANGE)
-            imageView.setImageResource(R.drawable.sevent_done);
-        else if (value == TRIPLE)
-            imageView.setImageResource(R.drawable.triple_done);
+            imageView.setImageResource(R.drawable.lemon);
+        else if (value == CHERRY)
+            imageView.setImageResource(R.drawable.cherry);
+        else if (value == BANANA)
+            imageView.setImageResource(R.drawable.banana);
         else
-            imageView.setImageResource(R.drawable.waternelon_done);
+            imageView.setImageResource(R.drawable.watermelon);
 
         imageView.setTag(value);
         lastResult = value;
