@@ -1,6 +1,5 @@
 package com.rayzem.slot_machine_app;
 
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceEventEnd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
     }
 
     public void init(){
@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceEventEnd
         score = findViewById(R.id.score);
 
         image.setEventEndListener(this);
+        image2.setEventEndListener(this);
+        image3.setEventEndListener(this);
 
         btnUp.setOnClickListener(new View.OnClickListener() {
             @Override

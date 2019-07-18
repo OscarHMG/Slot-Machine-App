@@ -8,15 +8,16 @@
     tools:context=".MainActivity">
 
 
-
     <TextView
-        android:layout_alignParentRight="true"
         android:id="@+id/score"
-        android:text="5000"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="517dp"
         android:padding="20dp"
-        android:textColor="@android:color/white"
-        android:layout_height="wrap_content" />
+        android:text="5000"
+        android:textColor="@android:color/white" />
 
 
     <FrameLayout
@@ -66,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="-1dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="42dp"
         android:layout_toEndOf="@+id/frame_bar"
         android:src="@drawable/up" />
@@ -75,11 +76,10 @@
         android:id="@+id/btn_Down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_alignBottom="@+id/frame_bar"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="1dp"
-        android:visibility="gone"
-        android:layout_toStartOf="@+id/score"
-        android:src="@drawable/down" />
+        android:layout_toEndOf="@+id/frame_bar"
+        android:src="@drawable/down"
+        android:visibility="gone" />
 
 </RelativeLayout>
