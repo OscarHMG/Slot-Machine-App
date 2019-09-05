@@ -91,6 +91,51 @@ public class ImageViewScrolling extends FrameLayout {
                 });
     }
 
+
+
+/*
+    public void setValueRandomValue(final int image, boolean stop){
+        current_item.animate().translationY(-getHeight()).setDuration(ANIMATION_DURATION).start();
+        next_item.setTranslationY(next_item.getHeight());
+        next_item.animate().translationY(0)
+                .setDuration(ANIMATION_DURATION)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        setItem(current_item, oldValue % 6);
+                        current_item.setTranslationY(0);
+
+                        if(oldValue != countRotate){
+                            setValueRandom(image, countRotate );
+                            oldValue++;
+                        }else{
+                            lastResult = 0;
+                            oldValue = 0;
+                            setItem(next_item, image);
+
+                            eventEndListener.endEventListener(image % 6, countRotate );
+                        }
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                })
+    }
+*/
+
     private void setItem(ImageView imageView, int value) {
 
 

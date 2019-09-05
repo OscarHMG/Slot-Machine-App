@@ -1,11 +1,19 @@
 package com.rayzem.slot_machine_app;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,82 +22,179 @@ import com.rayzem.slot_machine_app.CustomView.InterfaceEventEndListener;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements InterfaceEventEndListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
-    ImageView btnUp, btnDown;
+    private ImageView slot1, slot2 , slot3;
+    private Wheel wheel1, wheel2, wheel3;
 
-    ImageViewScrolling image, image2, image3;
+    private Button btn;
+
+    private boolean isStarted;
+
+    public static int GLOBAL_SCORE = 5000;
+
+    private SensorManager sensorManager;
+    private Sensor gyroscopeSensor;
+
+    private LinearLayout container_logo;
+    private FrameLayout container_slot_machine;
+
+    private long mRotationTime = 0;
+    private static final int ROTATION_WAIT_TIME_MS = 100;
+
 
     TextView score;
 
-    int count_done = 0;
+    static Random RANDOM = new Random();
 
-    public static int GLOBAL_SCORE = 5000;
+    public static long randomLong(long lower, long upper) {
+        return lower + (long) (RANDOM.nextDouble() * (upper - lower));
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init();
+
+        initView();
+
     }
 
-    public void init(){
-        btnDown = findViewById(R.id.btn_Down);
-        btnUp = findViewById(R.id.btn_Up);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
-        image = findViewById(R.id.image_1);
-        image2 = findViewById(R.id.image_2);
-        image3 = findViewById(R.id.image_3);
+        Toast.makeText(this, "Spin your phone", Toast.LENGTH_LONG).show();
+
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
+    }
+
+
+    public Wheel wheelInit(final ImageView slot, long init, long end){
+        Wheel wheel = new Wheel(new Wheel.WheelListener() {
+            @Override
+            public void newItem(final int img) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        slot.setImageResource(img);
+                    }
+                });
+
+            }
+        }, 200, randomLong(init, end));
+
+        wheel.start();
+
+        return wheel;
+    }
+
+    public void initView(){
+        View decorView = getWindow().getDecorView();
+
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+
+        slot1 = findViewById(R.id.img1);
+        slot2 = findViewById(R.id.img2);
+        slot3 = findViewById(R.id.img3);
 
         score = findViewById(R.id.score);
 
-        image.setEventEndListener(this);
-        image2.setEventEndListener(this);
-        image3.setEventEndListener(this);
+        container_logo = findViewById(R.id.container_logo);
+        container_slot_machine = findViewById(R.id.frame_bar);
 
         score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
 
 
-        btnUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(GLOBAL_SCORE >= 50){
-                    btnUp.setVisibility(View.GONE);
-                    btnDown.setVisibility(View.VISIBLE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-                    image.setValueRandom(new Random().nextInt(6) , new Random().nextInt((15-5) +1) +5);
-                    image2.setValueRandom(new Random().nextInt(6) , new Random().nextInt((15-5) +1) +5);
-                    image3.setValueRandom(new Random().nextInt(6) , new Random().nextInt((15-5) +1) +5);
-                    GLOBAL_SCORE -= 50;
-
-                    score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
-                }else{
-                    Toast.makeText(MainActivity.this, R.string.not_money, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 
     @Override
-    public void endEventListener(int result, int cont) {
+    public void onSensorChanged(SensorEvent event) {
 
-        if(count_done < 2){
-            count_done ++;
-        }else{
-            btnDown.setVisibility(View.GONE);
-            btnUp.setVisibility(View.VISIBLE);
-            count_done = 0;
+        long now = System.currentTimeMillis();
 
-            if(image.getValue() == image2.getValue() && image2.getValue() == image3.getValue()){
-                Toast.makeText(this, R.string.win_big, Toast.LENGTH_LONG).show();
-                GLOBAL_SCORE += 300;
-                score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
-            }else if(image.getValue() == image2.getValue() || image2.getValue() == image3.getValue() || image.getValue() == image3.getValue()){
-                Toast.makeText(this, R.string.win_small, Toast.LENGTH_LONG).show();
-                GLOBAL_SCORE += 50;
-                score.setText(getResources().getString(R.string.amount_text) +": $"+ GLOBAL_SCORE);
-            }else{
-                Toast.makeText(this, R.string.lose, Toast.LENGTH_LONG).show();
+        if((now - mRotationTime) > ROTATION_WAIT_TIME_MS){
+            if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+
+                if(Math.abs(event.values[2]) > 3){
+                    container_slot_machine.setVisibility(View.GONE);
+                    container_logo.setVisibility(View.VISIBLE);
+
+                }else if(Math.abs(event.values[2])>= 1 && Math.abs(event.values[2]) <= 2){
+                    if(wheel1 == null || wheel2 == null || wheel3 == null) {
+                        container_slot_machine.setVisibility(View.VISIBLE);
+                        container_logo.setVisibility(View.GONE);
+
+                        wheel1 = wheelInit(slot1, 0, 200);
+                        wheel2 = wheelInit(slot2, 150, 400);
+                        wheel3 = wheelInit(slot3, 150, 400);
+                        isStarted = true;
+                    }
+
+                }else if(Math.abs(event.values[2]) <= 0) {
+
+                    if(wheel1 != null || wheel2 != null || wheel3 != null) {
+                        wheel1.stopWheel();
+                        wheel2.stopWheel();
+                        wheel3.stopWheel();
+
+                        if (wheel1.currentIndex == wheel2.currentIndex && wheel2.currentIndex == wheel3.currentIndex) {
+                            Toast.makeText(MainActivity.this, R.string.win_big, Toast.LENGTH_LONG).show();
+                            GLOBAL_SCORE += 300;
+                            score.setText(getResources().getString(R.string.amount_text) + ": $" + GLOBAL_SCORE);
+                        } else if (wheel1.currentIndex == wheel2.currentIndex || wheel2.currentIndex == wheel3.currentIndex || wheel1.currentIndex == wheel3.currentIndex) {
+                            Toast.makeText(MainActivity.this, R.string.win_small, Toast.LENGTH_LONG).show();
+                            GLOBAL_SCORE += 50;
+                            score.setText(getResources().getString(R.string.amount_text) + ": $" + GLOBAL_SCORE);
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.lose, Toast.LENGTH_LONG).show();
+                            GLOBAL_SCORE -= 50;
+                        }
+
+
+                        wheel1 = null;
+                        wheel2 = null;
+                        wheel3 = null;
+                    }
+
+
+                    isStarted = false;
+
+
+                }
             }
         }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
+
+
+
+
+
+
