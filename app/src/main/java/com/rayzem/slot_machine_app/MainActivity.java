@@ -57,6 +57,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        View decorView = getWindow().getDecorView();
+        // Hide both the navigation bar and the status bar.
+        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+        // a general rule, you should design your app to hide the status bar whenever you
+        // hide the navigation bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         initView();
 
     }
@@ -151,9 +160,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         isStarted = true;
                     }
 
-                }else if(Math.abs(event.values[2]) <= 0) {
+                }else if(Math.abs(event.values[2]) < 0.5) {
 
-                    if(wheel1 != null || wheel2 != null || wheel3 != null) {
+                    if(wheel1 != null && wheel2 != null && wheel3 != null) {
                         wheel1.stopWheel();
                         wheel2.stopWheel();
                         wheel3.stopWheel();
