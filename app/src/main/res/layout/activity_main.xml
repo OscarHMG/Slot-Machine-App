@@ -7,6 +7,17 @@
     android:background="@drawable/background"
     tools:context=".MainActivity">
 
+    <Button
+        android:visibility="gone"
+        android:id="@+id/btnTryAgain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TRY AGAIN"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="25dp"
+        android:layout_marginBottom="15dp"/>
+
 
 
     <TextView

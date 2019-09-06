@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private LinearLayout container_logo;
     private FrameLayout container_slot_machine;
 
+    private Button btn_try_again;
+
     private long mRotationTime = 0;
     private static final int ROTATION_WAIT_TIME_MS = 100;
 
@@ -67,6 +69,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         decorView.setSystemUiVisibility(uiOptions);
 
         initView();
+
+        btn_try_again.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sensorManager.registerListener(MainActivity.this, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                btn_try_again.setVisibility(View.GONE);
+                container_slot_machine.setVisibility(View.GONE);
+                container_logo.setVisibility(View.VISIBLE);
+
+
+            }
+        });
 
     }
 
@@ -126,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         score = findViewById(R.id.score);
 
+        btn_try_again = findViewById(R.id.btnTryAgain);
+
+
+
         container_logo = findViewById(R.id.container_logo);
         container_slot_machine = findViewById(R.id.frame_bar);
 
@@ -145,12 +163,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if((now - mRotationTime) > ROTATION_WAIT_TIME_MS){
             if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
 
-                if(Math.abs(event.values[2]) > 3){
+                if(Math.abs(event.values[2]) > 2){
+                    btn_try_again.setVisibility(View.GONE);
                     container_slot_machine.setVisibility(View.GONE);
                     container_logo.setVisibility(View.VISIBLE);
 
-                }else if(Math.abs(event.values[2])>= 1 && Math.abs(event.values[2]) <= 2){
+                }else if(Math.abs(event.values[2])>= 1.5 && Math.abs(event.values[2]) <= 2){
                     if(wheel1 == null || wheel2 == null || wheel3 == null) {
+                        btn_try_again.setVisibility(View.GONE);
                         container_slot_machine.setVisibility(View.VISIBLE);
                         container_logo.setVisibility(View.GONE);
 
@@ -159,13 +179,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         wheel3 = wheelInit(slot3, 150, 400);
                         isStarted = true;
                     }
-
-                }else if(Math.abs(event.values[2]) < 0.5) {
+                }else if(Math.abs(event.values[2]) < 1.5) {
 
                     if(wheel1 != null && wheel2 != null && wheel3 != null) {
                         wheel1.stopWheel();
                         wheel2.stopWheel();
                         wheel3.stopWheel();
+
+                        //Stop
+                        sensorManager.unregisterListener(this);
 
                         if (wheel1.currentIndex == wheel2.currentIndex && wheel2.currentIndex == wheel3.currentIndex) {
                             Toast.makeText(MainActivity.this, R.string.win_big, Toast.LENGTH_LONG).show();
@@ -180,6 +202,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             GLOBAL_SCORE -= 50;
                         }
 
+
+                        btn_try_again.setVisibility(View.VISIBLE);
 
                         wheel1 = null;
                         wheel2 = null;
